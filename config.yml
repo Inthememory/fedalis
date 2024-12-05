@@ -1,0 +1,220 @@
+coup_de_pates:
+  rename:
+    '[EAN13]': product_id
+    '[Code Produit]': product_code
+    '[Libellé Produit]': product_name
+    '[Marque Produit]': brand_name
+    '[Famille Produit]': level_1
+    '[Sous Famille Produit]': level_2
+    '[Sous Famille 2 Produit]': level_3
+    '[Nature Produit]': level_4
+    '[Etat Produit]': level_5
+    Modele 1 Niv 1 BIS: level_1_standard
+    Modele 1 Niv 2 BIS: level_2_standard
+    '[Code Departement]': department
+    '[Année]': year
+    '[Mois Calendaire]': month
+    '[CA N]': turnover
+    '[Nb Colis N]': quantity
+    '[Poids N]': volume
+    Unité Poids: volume_unit
+  turnover_type: unknown
+
+ds_restauration:
+  rename:
+    EAN UVC: product_id
+    Code Produit: product_code
+    Nom Produit: product_name
+    Marque: brand_name
+    Fournisseur: supplier_name
+    Frais/Surg: level_1
+    Grande famille MKT: level_2
+    Famille MKT: level_3
+    Sous-famille MKT: level_4
+    Sous-sous-famille MKT: level_5
+    Modele 1 Niv 1 BIS: level_1_standard
+    Modele 1 Niv 2 BIS: level_2_standard
+    Département Client: department
+    Année: year
+    Mois: month
+    CA Net (€): turnover
+    Volume Vendu (kg): volume
+  add_columns:
+    volume_unit: KG
+  turnover_type: net
+
+ducreux:
+  rename:
+    Article code: product_code
+    Article lib: product_name
+    Secteur code: level_1
+    Secteur lib: level_2
+    Catégorie lib: level_3
+    Sous Catégorie lib: level_4
+    Modele 1 Niv 1 BIS: level_1_standard
+    Modele 1 Niv 2 BIS: level_2_standard
+    Département code: department
+    Année: year
+    Mois: month
+    CA: turnover
+    Poids net liv: volume
+    Unité Fact lib: volume_unit
+  turnover_type: unknown
+
+even:
+  rename:
+    Code EAN 13 Article Fournisseur Sodis: product_id
+    Code Article Sodis: product_code
+    Désignation Article Sodis: product_name
+    Libellé Marque Article Sodis: brand_name
+    Nom du Fournisseur Art Mouvt: supplier_name
+    Libellé Famille Article Sodis: level_1
+    Libellé Sous-Fam 1 Article Sodis: level_2
+    Libellé Sous-Fam 2 Article Sodis: level_3
+    Libellé Sous-Fam 3 Article Sodis: level_4
+    Modele 1 Niv 1 BIS: level_1_standard
+    Modele 1 Niv 2 BIS: level_2_standard
+    N° Département  ( du CP ): department
+    Année de Livraison: year
+    Mois de Livraison: month
+    Montant HT Brut Facturé: turnover
+    Qté / Poids Livré: volume
+    Unité de Facturation: volume_unit
+  turnover_type: brut
+
+metro:
+  rename:
+    gtin: product_id
+    art_no: product_code
+    art_name: product_name
+    brand_name: brand_name
+    SA: level_1
+    GA: level_2
+    SGA: level_3
+    SSGA: level_4
+    Modele 1 Niv 1 BIS: level_1_standard
+    Modele 1 Niv 2 BIS: level_2_standard
+    departement: department
+    annee: year
+    mois: month
+    CA_HT: turnover
+    Poids_volume: volume
+    unite_volume: volume_unit
+  turnover_type: HT
+
+pomona:
+  rename:
+    EAN/UPC: product_id
+    Article: product_code
+    Article LIBELLE: product_name
+    Mque comm.: brand_name
+    Mque indus: supplier_name
+    Hiér. produit niv. 1: level_1
+    Hiér. produit niv. 2: level_2
+    Hiér. produit niv. 3: level_3
+    Hiér. produit niv. 4: level_4
+    Hiér. produit niv. 5: level_5
+    Hiér. produit niv. 6: level_6
+    Gpe marchandise: level_7
+    Modele 1 Niv 1 BIS: level_1_standard
+    Modele 1 Niv 2 BIS: level_2_standard
+    Département client: department
+    annee: year
+    CA brut: turnover
+    Poids livré: volume
+  add_columns:
+    volume_unit: KG
+  turnover_type: brut
+
+pro_a_pro:
+  rename:
+    Code Article International: product_id
+    Code Article Interne: product_code
+    Libelle Article: product_name
+    'Libelle Marque - ': brand_name
+    'Libelle Fournisseur - ': supplier_name
+    Secteur: level_1
+    Famille: level_2
+    Sous Famille: level_3
+    Sous Sous Famille: level_4
+    Modele 1 Niv 1 BIS: level_1_standard
+    Modele 1 Niv 2 BIS: level_2_standard
+    Département d'activité client: zip_code
+    Année: year
+    Mois: month
+    CA facturé hors taxe: turnover
+    Volume facturé: volume
+  add_columns:
+    volume_unit: KG
+  turnover_type: HT
+
+relais_dor:
+  rename:
+    Code produit: product_code
+    Lib produit: product_name
+    Marque: brand_name
+    Hiérarchie Tout Produit niv 1: level_1
+    Hiérarchie Tout Produit niv 2: level_2
+    Hiérarchie Tout Produit niv 3: level_3
+    Hiérarchie Tout Produit niv 4: level_4
+    Modele 1 Niv 1 BIS: level_1_standard
+    Modele 1 Niv 2 BIS: level_2_standard
+    CP: zip_code
+    Année de ventes: year
+    Mois de ventes: month
+    CA: turnover
+    Poids: volume
+  add_columns:
+    volume_unit: KG
+  turnover_type: unknown
+
+sysco:
+  rename:
+    Code EAN Unité de base (UB): product_id
+    Code article: product_code
+    Libellé article: product_name
+    Température produit: level_1
+    Libellé hic produit Sysco N2: level_2
+    Libellé hic produit Sysco N3: level_3
+    Libellé hic produit Sysco N4: level_4
+    Modele 1 Niv 1 BIS: level_1_standard
+    Modele 1 Niv 2 BIS: level_2_standard
+    Departement: department
+    year: year
+    month: month
+    CA Brut: turnover
+    Quantité KG: volume
+  add_columns:
+    volume_unit: KG
+  turnover_type: brut
+
+transgourmet:
+  rename:
+    Code EAN13: product_id
+    Code Article Centrale: product_code
+    Nom Court Article: product_name
+    Nom Marque: brand_name
+    Nom Fournisseur Réception: supplier_name
+    Nom Famille: level_1
+    Nom Sous Famille: level_2
+    Modele 1 Niv 1 BIS: level_1_standard
+    Modele 1 Niv 2 BIS: level_2_standard
+    Département de Livraison: department
+    Annee: year
+    Mois: month
+    Ca Brut: turnover
+    Poids Brut Facturé: volume
+  add_columns:
+    volume_unit: KG
+  turnover_type: brut
+
+required_columns:
+  level_1: NON RENSEIGNE
+  level_2: NON RENSEIGNE
+  level_3: NON RENSEIGNE
+  level_4: NON RENSEIGNE
+  level_5: NON RENSEIGNE
+  level_6: NON RENSEIGNE
+  level_7: NON RENSEIGNE
+
+
