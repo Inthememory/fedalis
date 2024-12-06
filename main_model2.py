@@ -10,15 +10,15 @@ from utils.transform import add_required_columns, handle_empty
 from utils.profiling import check_unicity, compute_kpis
 
 from data import (
-    coup_de_pates,
-    ds_restauration,
-    ducreux,
-    even,
+    # coup_de_pates,
+    # ds_restauration,
+    # ducreux,
+    # even,
     metro,
-    pomona,
-    pro_a_pro,
-    relais_dor,
-    sysco,
+    # pomona,
+    # pro_a_pro,
+    # relais_dor,
+    # sysco,
 )
 
 pl.Config.set_tbl_rows(-1)
@@ -31,15 +31,15 @@ if __name__ == "__main__":
     logger.add("data/log/model_2/logs.txt", mode="w", level="INFO")
 
     retailers = [
-        ("coup_de_pates", coup_de_pates),
-        ("ds_restauration", ds_restauration),
-        ("ducreux", ducreux),
-        ("even", even),
+        # ("coup_de_pates", coup_de_pates),
+        # ("ds_restauration", ds_restauration),
+        # ("ducreux", ducreux),
+        # ("even", even),
         ("metro", metro),
-        ("pomona", pomona),
-        ("pro_a_pro", pro_a_pro),
-        ("relais_dor", relais_dor),
-        ("sysco", sysco),
+        # ("pomona", pomona),
+        # ("pro_a_pro", pro_a_pro),
+        # ("relais_dor", relais_dor),
+        # ("sysco", sysco),
     ]
 
     required_columns = configuration[
@@ -152,6 +152,8 @@ if __name__ == "__main__":
         retailer_map = retailer_map.with_columns(
             [pl.col(c).cast(pl.String).str.strip_chars() for c in retailer_map.columns]
         )
+        if retailer_name =='metro':
+            retailer_map = retailer_map.with_columns([pl.col(c).cast(pl.Utf8).str.replace("\?", "ї") for c in ['level_1', 'level_2', 'level_3', 'level_4', 'level_5', 'level_6', 'level_7']])
 
         ## Step 3 : Mapping
 
@@ -441,8 +443,8 @@ if __name__ == "__main__":
     ## Misclassification
     dataset_concat = pl.concat(
         [
-            pl.read_parquet(f"data/output/{filename}")
-            for filename in os.listdir("data/output")
+            pl.read_parquet(f"data/output/{filename}").filter(~pl.col(f'level_3_standard_{filename.split(".")[0]}').is_in(["A L'EAN", "A l'EAN"]))
+            for filename in os.listdir("data/output") if filename.endswith('parquet')
         ],
         how="align",
     )
