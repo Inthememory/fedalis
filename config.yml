@@ -18,6 +18,9 @@ coup_de_pates:
     '[Nb Colis N]': quantity
     '[Poids N]': volume
     Unité Poids: volume_unit
+    '[Activite Client 1]': segment_1
+    '[Activite Client 2]': segment_2
+    '[Type Client]': segment_3
   turnover_type: unknown
 
 ds_restauration:
@@ -59,6 +62,7 @@ ducreux:
     CA: turnover
     Poids net liv: volume
     Unité Fact lib: volume_unit
+    Activité client lib: segment_1
   turnover_type: unknown
 
 even:
@@ -80,6 +84,9 @@ even:
     Montant HT Brut Facturé: turnover
     Qté / Poids Livré: volume
     Unité de Facturation: volume_unit
+    Libellé Type Enseigne: segment_1
+    Libellé Centrale: segment_2
+    Libellé Plateforme: segment_3
   turnover_type: brut
 
 metro:
@@ -100,6 +107,7 @@ metro:
     CA_HT: turnover
     Poids_volume: volume
     unite_volume: volume_unit
+    classification_client: segment_1
   turnover_type: HT
 
 pomona:
@@ -122,8 +130,14 @@ pomona:
     annee: year
     CA brut: turnover
     Poids livré: volume
+    Segment 1: segment_1
+    Segment 2: segment_2
+    Segment 3: segment_3
+    Segment 4: segment_4
+    Catégorie: segment_5
+    Sous Catégorie: segment_6
   add_columns:
-    volume_unit: KG
+    volume_unit: unknown
   turnover_type: brut
 
 pro_a_pro:
@@ -144,6 +158,9 @@ pro_a_pro:
     Mois: month
     CA facturé hors taxe: turnover
     Volume facturé: volume
+    Secteur d'activité client: segment_1
+    Segment d'activité client: segment_2
+    Mode d'activité client: segment_3
   add_columns:
     volume_unit: KG
   turnover_type: HT
@@ -164,8 +181,12 @@ relais_dor:
     Mois de ventes: month
     CA: turnover
     Poids: volume
+    Fam Cli: segment_1
+    SFam Cli: segment_2
+    SSFam Cli: segment_3
+    SSSFam Cli: segment_4
   add_columns:
-    volume_unit: KG
+    volume_unit: unknown
   turnover_type: unknown
 
 sysco:
@@ -184,6 +205,8 @@ sysco:
     month: month
     CA Brut: turnover
     Quantité KG: volume
+    Code typologie CG: segment_1
+    Libellé famille client Sisense: segment_2
   add_columns:
     volume_unit: KG
   turnover_type: brut
@@ -195,8 +218,9 @@ transgourmet:
     Nom Court Article: product_name
     Nom Marque: brand_name
     Nom Fournisseur Réception: supplier_name
-    Nom Famille: level_1
-    Nom Sous Famille: level_2
+    Gamme Tdb: level_1
+    Nom Famille: level_2
+    Nom Sous Famille: level_3
     Modele 1 Niv 1 BIS: level_1_standard
     Modele 1 Niv 2 BIS: level_2_standard
     Département de Livraison: department
@@ -204,11 +228,13 @@ transgourmet:
     Mois: month
     Ca Brut: turnover
     Poids Brut Facturé: volume
+    Nom Segmentation: segment_1
+    Code Segment Cible: segment_2
   add_columns:
-    volume_unit: KG
+    volume_unit: unknown
   turnover_type: brut
 
-required_columns:
+required_columns_pdt:
   level_1: NON RENSEIGNE
   level_2: NON RENSEIGNE
   level_3: NON RENSEIGNE
@@ -217,4 +243,21 @@ required_columns:
   level_6: NON RENSEIGNE
   level_7: NON RENSEIGNE
 
+required_columns_customer:
+  segment_1: NON RENSEIGNE
+  segment_2: NON RENSEIGNE
+  segment_3: NON RENSEIGNE
+  segment_4: NON RENSEIGNE
+  segment_5: NON RENSEIGNE
+  segment_6: NON RENSEIGNE
 
+required_columns_pdt_standard:
+  level_1_standard: NON RENSEIGNE
+  level_2_standard: NON RENSEIGNE
+  level_3_standard: NON RENSEIGNE
+  level_4_standard: NON RENSEIGNE
+
+required_columns_customer_standard:
+  segment_1_standard: NON RENSEIGNE
+  segment_2_standard: NON RENSEIGNE
+  segment_3_standard: NON RENSEIGNE

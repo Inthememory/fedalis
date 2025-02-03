@@ -1,6 +1,7 @@
 import os
 import polars as pl
 import yaml
+import argparse
 from loguru import logger
 import xlsxwriter
 from itertools import combinations
@@ -10,36 +11,45 @@ from utils.transform import add_required_columns, handle_empty
 from utils.profiling import check_unicity, compute_kpis
 
 from data import (
-    # coup_de_pates,
-    # ds_restauration,
-    # ducreux,
-    # even,
+    coup_de_pates,
+    ds_restauration,
+    ducreux,
+    even,
     metro,
-    # pomona,
-    # pro_a_pro,
-    # relais_dor,
-    # sysco,
+    pomona,
+    pro_a_pro,
+    relais_dor,
+    sysco,
 )
 
 pl.Config.set_tbl_rows(-1)
 pl.Config.set_tbl_width_chars(0)
 
 if __name__ == "__main__":
+    # Add argparse for the command line:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--model_id", type=int, required=True, help="Id of the model to use."
+    )
+    args = parser.parse_args()
+
+    # Load the configuration file
     with open("config.yml", "r", encoding="utf-8") as file:
         configuration = yaml.safe_load(file)
 
-    logger.add("data/log/model_2/logs.txt", mode="w", level="INFO")
+    logger.add(f"data/log/model_{args.model_id}/logs.txt", mode="w", level="INFO")
 
+    # Set parameters
     retailers = [
-        # ("coup_de_pates", coup_de_pates),
-        # ("ds_restauration", ds_restauration),
-        # ("ducreux", ducreux),
-        # ("even", even),
+        ("coup_de_pates", coup_de_pates),
+        ("ds_restauration", ds_restauration),
+        ("ducreux", ducreux),
+        ("even", even),
         ("metro", metro),
-        # ("pomona", pomona),
-        # ("pro_a_pro", pro_a_pro),
-        # ("relais_dor", relais_dor),
-        # ("sysco", sysco),
+        ("pomona", pomona),
+        ("pro_a_pro", pro_a_pro),
+        ("relais_dor", relais_dor),
+        ("sysco", sysco),
     ]
 
     required_columns = configuration[
@@ -87,7 +97,7 @@ if __name__ == "__main__":
         )
 
         # Configure file to write logs
-        wb = xlsxwriter.Workbook(f"data/log/model_2/log_{retailer_name}.xlsx")
+        wb = xlsxwriter.Workbook(f"data/log/model_{args.model_id}/log_{retailer_name}.xlsx")
 
         ## Step 1: retailer_dataset
 
@@ -139,7 +149,8 @@ if __name__ == "__main__":
         ## Step 2 : retailer_map
 
         retailer_map = pl.read_csv(
-            "data/mapping_model2.csv", separator=";", encoding="cp1252"
+            f"data/mapping_model{args.model_id}.csv", separator=";"
+            # , encoding="cp1252"
         ).filter(pl.col("ENTREPRISE") == retailer_name)
 
         # Add required columns
@@ -186,7 +197,7 @@ if __name__ == "__main__":
                 .rename(lambda col: f"{col}_{retailer_name}")
                 .rename({f"product_id_{retailer_name}": "product_id"})
             )
-            dataset_for_comparison.write_parquet(f"data/output/{retailer_name}.parquet")
+            dataset_for_comparison.write_parquet(f"data/tmp/{retailer_name}.parquet")
 
         logger.info(
             f"retailer_dataset shape/matched rows : {retailer_dataset.shape} / {dataset.filter(pl.col('level_1_standard').is_not_null()).shape})"
@@ -290,7 +301,7 @@ if __name__ == "__main__":
     # ------
 
     wb_global = xlsxwriter.Workbook(
-        f"data/log/model_2/log_global.xlsx", options={"nan_inf_to_errors": True}
+        f"data/log/model_{args.model_id}/log_global.xlsx", options={"nan_inf_to_errors": True}
     )
 
     # Market Share
@@ -443,8 +454,8 @@ if __name__ == "__main__":
     ## Misclassification
     dataset_concat = pl.concat(
         [
-            pl.read_parquet(f"data/output/{filename}").filter(~pl.col(f'level_3_standard_{filename.split(".")[0]}').is_in(["A L'EAN", "A l'EAN"]))
-            for filename in os.listdir("data/output") if filename.endswith('parquet')
+            pl.read_parquet(f"data/tmp/{filename}").filter(~pl.col(f'level_3_standard_{filename.split(".")[0]}').is_in(["A L'EAN", "A l'EAN"]))
+            for filename in os.listdir("data/tmp") if filename.endswith('parquet')
         ],
         how="align",
     )

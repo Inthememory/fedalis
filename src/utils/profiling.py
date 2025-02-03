@@ -1,5 +1,31 @@
 import polars as pl
 
+from typing import List
+
+def agg_kpis(dataset_lst:List[pl.DataFrame], cols:list)->pl.DataFrame:
+    """_summary_
+
+    Args:
+        dataset_lst (List[pl.DataFrame]): _description_
+        cols (list): _description_
+
+    Returns:
+        pl.DataFrame: _description_
+    """
+    return (
+        pl.concat(dataset_lst, how="vertical")
+        .with_columns(
+            ms_turnover=pl.col("turnover")
+            / pl.col("turnover").sum().over(cols)
+        )
+        .with_columns(
+            ms_nb_product_ids=pl.col("nb_product_ids")
+            / pl.col("nb_product_ids")
+            .sum()
+            .over(cols)
+        )
+        .sort(["retailer"] + cols)
+    )
 
 def check_unicity(
     df: pl.DataFrame, subset_col: list, cols_to_check: list
@@ -73,3 +99,15 @@ def compute_kpis(df: pl.DataFrame, cols: list) -> pl.DataFrame:
         .with_columns(pl.col('nb_product_codes').cast(pl.Int32))
         .sort(cols)
     )
+
+
+def incremental_sublists(lst:list)->list:
+    """_summary_
+
+    Args:
+        lst (list): _description_
+
+    Returns:
+        list: _description_
+    """
+    return [lst[:i] for i in range(1, len(lst) + 1)]
