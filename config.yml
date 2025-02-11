@@ -82,11 +82,14 @@ even:
     Année de Livraison: year
     Mois de Livraison: month
     Montant HT Brut Facturé: turnover
-    Qté / Poids Livré: volume
-    Unité de Facturation: volume_unit
+    Poids Saisi Livré: volume
+    # Qté / Poids Livré: volume
+    # Unité de Facturation: volume_unit
     Libellé Type Enseigne: segment_1
     Libellé Centrale: segment_2
     Libellé Plateforme: segment_3
+  add_columns:
+    volume_unit: KG
   turnover_type: brut
 
 metro:

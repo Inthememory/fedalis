@@ -54,6 +54,8 @@ if __name__ == "__main__":
         configuration["required_columns_pdt_standard"],
         configuration["required_columns_customer_standard"],
     )
+    nb_levels_standard = len(list(required_columns_pdt_std.keys()))
+    nb_segments_standard = len(list(required_columns_customer_std.keys()))
 
     selected_columns = (
         ["product_id", "product_code", "product_name", "brand_name"]
@@ -72,6 +74,7 @@ if __name__ == "__main__":
             "product_name",
             "brand_name",
             "year",
+            "volume_unit",
         ]
         + list(required_columns_pdt.keys())
         + list(required_columns_customer.keys())
@@ -124,7 +127,13 @@ if __name__ == "__main__":
         # Cast Turnover as Float
         if retailer_dataset.select("turnover").dtypes[0] == pl.String:
             retailer_dataset = retailer_dataset.with_columns(
-                pl.col("turnover").str.replace(",", ".").cast(pl.Float64)
+                pl.col("turnover").str.replace(",", ".").str.replace(" ", "").cast(pl.Float64)
+            )
+
+        # Cast Volume as float
+        if retailer_dataset.select("volume").dtypes[0] == pl.String:
+            retailer_dataset = retailer_dataset.with_columns(
+                pl.col("volume").str.replace(",", ".").str.replace(" ", "").cast(pl.Float64)
             )
 
         # Clean department column
@@ -147,7 +156,7 @@ if __name__ == "__main__":
             )
 
         # add_columns
-        if configuration.get(retailer_name, {}).get('add_columns', False):
+        if configuration.get(retailer_name, {}).get("add_columns", False):
             retailer_dataset = retailer_dataset.with_columns(
                 [
                     pl.lit(default_value).alias(col)
@@ -255,36 +264,19 @@ if __name__ == "__main__":
 
         # Upload enhanced dataset retailer
         if "product_id" in retailer_dataset.columns:
-            dataset_for_comparison = (
-                dataset.with_columns(
-                    pl.concat_str(
-                        list(required_columns_pdt.keys()), separator=">"
-                    ).alias("classification")
+            dataset_for_comparison = dataset.with_columns(
+                pl.concat_str(list(required_columns_pdt.keys()), separator=">").alias(
+                    "classification"
                 )
-                .select(
-                    ["product_id", "product_name", "classification", "volume_unit"]
-                    + [c for c in dataset.columns if c.endswith("_standard")]
-                )
-                .unique()
-                .rename(lambda col: f"{col}_{retailer_name}")
-                .rename({f"product_id_{retailer_name}": "product_id"})
             )
             dataset_for_comparison.write_parquet(
                 f"{SILVER_PATH}/with_id/{retailer_name}.parquet"
             )
         else:
-            dataset_for_comparison = (
-                dataset.with_columns(
-                    pl.concat_str(
-                        list(required_columns_pdt.keys()), separator=">"
-                    ).alias("classification")
+            dataset_for_comparison = dataset.with_columns(
+                pl.concat_str(list(required_columns_pdt.keys()), separator=">").alias(
+                    "classification"
                 )
-                .select(
-                    ["product_code", "product_name", "classification", "volume_unit"]
-                    + [c for c in dataset.columns if c.endswith("_standard")]
-                )
-                .unique()
-                .rename(lambda col: f"{col}_{retailer_name}")
             )
             dataset_for_comparison.write_parquet(
                 f"{SILVER_PATH}/without_id/{retailer_name}.parquet"
@@ -514,7 +506,16 @@ if __name__ == "__main__":
 
     dataset_concat = pl.concat(
         [
-            pl.read_parquet(f"{SILVER_PATH}with_id/{filename}").filter(
+            pl.read_parquet(f"{SILVER_PATH}with_id/{filename}")
+            .select(
+                ["product_id", "product_name", "classification", "volume_unit"]
+                + [f"level_{i}_standard" for i in range(1, nb_levels_standard + 1)]
+                + [f"segment_{i}_standard" for i in range(1, nb_segments_standard + 1)]
+            )
+            .unique()
+            .rename(lambda col: f'{col}_{filename.split(".")[0]}')
+            .rename({f'product_id_{filename.split(".")[0]}': "product_id"})
+            .filter(
                 ~pl.col(f'level_4_standard_{filename.split(".")[0]}').is_in(
                     ["A L'EAN", "A l'EAN"]
                 )
